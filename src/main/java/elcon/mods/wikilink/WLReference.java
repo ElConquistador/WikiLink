@@ -11,4 +11,7 @@ public class WLReference {
     public static final String CLIENT_PROXY_CLASS = "elcon.mods.wikilink.WLClientProxy";
     
     public static final String VERSION_URL = "https://raw.github.com/ItsMeElConquistador/WikiLink/master/version.xml";
+    
+    public static final String GOOGLE_TOKEN = "AIzaSyBXn0XhTUmjs5VLTAyX4uuj0RxrnqTDq_M";
+	public static final String BITLY_API_TOKEN = "72107fafc4dda52519a18db8bee00445154cf4c3";
 }
