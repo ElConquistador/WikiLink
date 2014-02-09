@@ -6,21 +6,20 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import cpw.mods.fml.common.Mod;
 import elcon.mods.wikilink.api.ILinkType;
 import elcon.mods.wikilink.web.WebHelper;
 
-public class LinkTypeGoogle implements ILinkType {
+public class LinkTypeMinecraftWiki implements ILinkType {
 
 	@Override
 	public String getName() {
-		return "Google";
+		return "MinecraftWiki";
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Class<?>> getTopics() {
-		return Arrays.asList(ItemStack.class, FluidStack.class, Entity.class, Mod.class);
+		return Arrays.asList(ItemStack.class, FluidStack.class, Entity.class);
 	}
 	
 	@Override
@@ -37,14 +36,13 @@ public class LinkTypeGoogle implements ILinkType {
 			topicName = ((FluidStack) topic).getFluid().getLocalizedName();
 		} else if(topic instanceof Entity) {
 			topicName = ((Entity) topic).getCommandSenderName();
-		} else if(topic instanceof Mod) {
-			topicName = ((Mod) topic).name();
 		}
-		return "http://google.com/search?q=minecraft+" + WebHelper.encode(topicName);
+		return "http://minecraft.gamepedia.com/index.php?search=" + WebHelper.encode(topicName);
 	}
 	
 	@Override
 	public String generateLink(Object topic) {
+		//TODO: generate link if exists
 		return null;
 	}
 }

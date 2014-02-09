@@ -10,11 +10,11 @@ import cpw.mods.fml.common.Mod;
 import elcon.mods.wikilink.api.ILinkType;
 import elcon.mods.wikilink.web.WebHelper;
 
-public class LinkTypeGoogle implements ILinkType {
+public class LinkTypeGoogleLucky implements ILinkType {
 
 	@Override
 	public String getName() {
-		return "Google";
+		return "GoogleLucky";
 	}
 
 	@SuppressWarnings("unchecked")
@@ -22,12 +22,12 @@ public class LinkTypeGoogle implements ILinkType {
 	public List<Class<?>> getTopics() {
 		return Arrays.asList(ItemStack.class, FluidStack.class, Entity.class, Mod.class);
 	}
-	
+
 	@Override
 	public boolean isSearchOnly() {
-		return false;
+		return true;
 	}
-
+	
 	@Override
 	public String generateSearchLink(Object topic) {
 		String topicName = "";
@@ -40,7 +40,7 @@ public class LinkTypeGoogle implements ILinkType {
 		} else if(topic instanceof Mod) {
 			topicName = ((Mod) topic).name();
 		}
-		return "http://google.com/search?q=minecraft+" + WebHelper.encode(topicName);
+		return "http://google.com/search?q=minecraft+" + WebHelper.encode(topicName) + "&btnI";
 	}
 	
 	@Override
