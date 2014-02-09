@@ -37,6 +37,8 @@ public class WikiLink {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		WikiLinkAPI.linkRegistry.registerLinkMod(WikiLinkAPI.linkRegistry.generateLinkMod(this, "http://www.minecraftforum.net/topic/1926671-", "http://wikilink.info", "", ""));
+		
 		proxy.registerRenderingInformation();
 	}
 	
