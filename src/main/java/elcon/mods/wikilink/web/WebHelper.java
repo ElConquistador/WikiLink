@@ -1,0 +1,139 @@
+package elcon.mods.wikilink.web;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import elcon.mods.wikilink.Reference;
+import elcon.mods.wikilink.WikiLink;
+
+/**
+ * <b>WebHelper</b><br>
+ * Parent class designed to extend the use of web api systems such as bit.ly or
+ * Google.
+ * 
+ * @since 11/27/2013
+ * @author DrEinsteinium
+ * **/
+public class WebHelper
+{
+    /**
+     * <b>encode</b><br>
+     * Returns the ASCII encoded version of the given string. This keeps a great
+     * deal of confusion away when sending hyperlinks to the web api.
+     * **/
+    public static String encode(String str)
+    {
+        return str.replace(" ","%20")
+                  .replace("!","%21")
+                  .replace("#","%23")
+                  .replace("$","%24")
+                  .replace("&","%26")
+                  .replace("'","%27")
+                  .replace("(","%28")
+                  .replace(")","%29")
+                  .replace("*","%2A")
+                  .replace("+","%2B")
+                  .replace(",","%2C")
+                  .replace("/","%2F")
+                  .replace(":","%3A")
+                  .replace(";","%3B")
+                  .replace("=","%3D")
+                  .replace("?","%3F")
+                  .replace("@","%40")
+                  .replace("[","%5B")
+                  .replace("]","%5D");
+    }
+
+    /**
+     * <b>decode</b><br>
+     * Returns a decoded ASCII encoded version of the given string. See the
+     * encode method for details. <br>
+     * Use this incase a web api gives back a dumb encoded response.
+     * **/
+    public static String decode(String str)
+    {
+        return str.replace("%20"," ")
+                  .replace("%21","!")
+                  .replace("%23","#")
+                  .replace("%24","$")
+                  .replace("%26","&")
+                  .replace("%27","'")
+                  .replace("%28","(")
+                  .replace("%29",")")
+                  .replace("%2A","*")
+                  .replace("%2B","+")
+                  .replace("%2C",",")
+                  .replace("%2F","/")
+                  .replace("%3A",":")
+                  .replace("%3B",";")
+                  .replace("%3D","=")
+                  .replace("%3F","?")
+                  .replace("%40","@")
+                  .replace("%5B","[")
+                  .replace("%5D","]");
+    }
+
+    /**
+     * <b>getResponse</b><br>
+     * getResponse returns the web api response for the given string url. This
+     * does not check to see if the url is encoded.
+     * **/
+    public static String getResponse(String str)
+    {
+        String response = null;
+
+        try
+        {
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    new URL(str).openStream()));
+
+            String line;
+            while ((line = in.readLine()) != null)
+                response += line;
+
+            in.close();
+        } catch (Exception e)
+        {
+            WikiLink.LogHelper.severe("Exception occured while seeking an api response with " + str);
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    /**
+     * <b>shortenHyperlink</b><br>
+     * Returns a shortened version of the hyperlink given. This hyperlink is
+     * shortened using the bit.ly api, and returns a result like:
+     * 
+     * <pre>
+     * http://wikilink.info/xxxxxx/
+     * </pre>
+     * **/
+    public static String shortenHyperlink(String str)
+    {
+        String hyperlink = str;
+        String url = String.format(
+                "https://api-ssl.bitly.com/v3/shorten?access_token=%s"
+                        + "&longUrl=%s", Reference.BITAPI_TOKEN, encode(str));
+
+        String response = getResponse(url);
+
+        try{
+        if (response != null)
+            hyperlink = "http://"
+                    + response.substring(response.indexOf("wikilink.info"),
+                            response.indexOf("wikilink.info") + 22).replace(
+                            "\\/", "/");
+        }
+        catch(Exception e)
+        {
+            return hyperlink;
+        }
+
+        return hyperlink;
+    }
+}

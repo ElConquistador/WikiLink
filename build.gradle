@@ -1,0 +1,71 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+	def prop = new Properties()
+	prop.load(it)
+	ext.config = new ConfigSlurper().parse prop
+}
+
+group = config.mod_group
+version = config.mod_version
+archivesBaseName = config.mod_name
+
+minecraft {
+    version = config.minecraft_version + "-" + config.forge_version
+    assetDir = "run/assets"
+}
+
+version = "${config.minecraft_version}-${config.mod_version}.${System.getenv().BUILD_NUMBER}"
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        
+        expand 'version': project.config.mod_version, 'mcversion': project.config.minecraft_version, 'buildnumber': "${System.getenv().BUILD_NUMBER}"
+    }
+	
+	from(sourceSets.main.java.srcDirs) {
+        include 'ECReference.java'
+        
+        expand 'version': project.config.mod_version, 'mcversion': project.config.minecraft_version, 'buildnumber': "${System.getenv().BUILD_NUMBER}"
+    }
+    
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+task release(type: Copy) {
+	from project.tasks.jar.destinationDir
+	into project.file(config.release_location.replace('{NAME}', config.mod_name).replace('{MC}', config.minecraft_version).replace('{MODVER}', config.mod_version).replace('{BUILD}', "${System.getenv().BUILD_NUMBER}"))
+}
+
+task cleanJenkins(type: Delete) {
+	delete 'packages'
+}
+
+task jenkins(type: Copy) {
+	dependsOn cleanJenkins
+
+	from project.tasks.jar.destinationDir
+	into project.file(config.jenkins_location.replace('{NAME}', config.mod_name).replace('{MC}', config.minecraft_version).replace('{MODVER}', config.mod_version).replace('{BUILD}', "${System.getenv().BUILD_NUMBER}"))
+}
