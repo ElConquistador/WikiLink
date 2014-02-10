@@ -12,6 +12,9 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import elcon.mods.wikilink.api.WikiLinkAPI;
 import elcon.mods.wikilink.link.LinkRegistry;
+import elcon.mods.wikilink.link.types.LinkTypeGoogle;
+import elcon.mods.wikilink.link.types.LinkTypeGoogleLucky;
+import elcon.mods.wikilink.link.types.LinkTypeMinecraftWiki;
 
 @Mod(modid = WLReference.MOD_ID, name = WLReference.NAME, version = WLReference.VERSION, acceptedMinecraftVersions = WLReference.MC_VERSION, dependencies = WLReference.DEPENDENCIES)
 public class WikiLink {
@@ -37,6 +40,10 @@ public class WikiLink {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		WikiLinkAPI.linkRegistry.registerLinkType(new LinkTypeGoogle());
+		WikiLinkAPI.linkRegistry.registerLinkType(new LinkTypeGoogleLucky());
+		WikiLinkAPI.linkRegistry.registerLinkType(new LinkTypeMinecraftWiki());
+		
 		WikiLinkAPI.linkRegistry.registerLinkMod(WikiLinkAPI.linkRegistry.generateLinkMod(this, "http://www.minecraftforum.net/topic/1926671-", "http://wikilink.info", "", ""));
 		
 		proxy.registerRenderingInformation();

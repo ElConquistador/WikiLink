@@ -3,6 +3,7 @@ package elcon.mods.wikilink.link;
 import java.util.HashMap;
 
 import cpw.mods.fml.common.Mod;
+import elcon.mods.wikilink.WikiLink;
 import elcon.mods.wikilink.api.ILinkMod;
 import elcon.mods.wikilink.api.ILinkRegistry;
 import elcon.mods.wikilink.api.ILinkType;
@@ -23,6 +24,7 @@ public class LinkRegistry implements ILinkRegistry {
 	@Override
 	public void registerLinkType(ILinkType linkType) {
 		linkTypes.put(linkType.getName(), linkType);
+		WikiLink.log.info("Registered link type: " + linkType.getName());
 	}
 	
 	@Override
