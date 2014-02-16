@@ -1,8 +1,12 @@
 package elcon.mods.wikilink;
 
+import net.minecraft.client.settings.KeyBinding;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -28,6 +32,9 @@ public class WikiLink {
 	public static Logger log = LogManager.getLogger(WLReference.MOD_ID);
 	
 	public static WLConfig config;
+	public static WLEventHandlerClient eventHandlerClient;
+	
+	public static KeyBinding keyBinding;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -50,7 +57,9 @@ public class WikiLink {
 	}
 	
 	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		
+	public void postInit(FMLPostInitializationEvent event) {	
+		//register key binding
+		keyBinding = new KeyBinding("key.wikilink", Keyboard.KEY_I, "key.categories.inventory");
+		ClientRegistry.registerKeyBinding(keyBinding);
 	}
 }
