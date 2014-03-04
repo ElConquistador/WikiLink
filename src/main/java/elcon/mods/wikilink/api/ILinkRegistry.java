@@ -1,5 +1,7 @@
 package elcon.mods.wikilink.api;
 
+import java.util.Comparator;
+
 public interface ILinkRegistry {
 
 	/**
@@ -44,7 +46,7 @@ public interface ILinkRegistry {
 	 * @param topic A topic (example: ItemStack)
 	 * @return A link object for the topic
 	 */
-	public ILink getLink(Object topic);
+	public ILinkCollection getLink(Object topic);
 	
 	/**
 	 * Get the link mod that for this name
@@ -53,4 +55,9 @@ public interface ILinkRegistry {
 	 * @return Return the link mod or null, if it doesn't exist
 	 */
 	public ILinkMod getLinkMod(String mod);
+	
+	/**
+	 * @return Returns the default link type comparator
+	 */
+	public Comparator<ILink> getLinkComparator();
 }

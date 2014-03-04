@@ -1,5 +1,11 @@
+key.wikilink=WikiLink Menu
+
+wikilink.gui.browser=Browser
+wikilink.gui.clipboard=Clipboard
+wikilink.gui.summarize=?
+wikilink.gui.back=X
+wikilink.gui.fail=Couldn't load website
+
 wikilink.types.Google=Google
 wikilink.types.GoogleLucky=Google - Feeling Lucky
 wikilink.types.MinecraftWiki=Minecraft Wiki
-
-key.wikilink=WikiLink Menu

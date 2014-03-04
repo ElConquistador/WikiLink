@@ -2,7 +2,15 @@ package elcon.mods.wikilink.web;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.URL;
+import java.net.URLConnection;
+
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.HTMLEditorKit.Parser;
+import javax.swing.text.html.parser.ParserDelegator;
 
 import elcon.mods.wikilink.WLReference;
 
@@ -19,7 +27,11 @@ public class WebHelper {
 	public static String getResponse(String str) {
 		String response = null;
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(new URL(str).openStream()));
+			URL url = new URL(str);
+			URLConnection uc = url.openConnection();
+			uc.addRequestProperty("User-Agent",  "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
+			uc.connect();
+			BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
 			String line;
 			while((line = in.readLine()) != null) {
 				response += line;
@@ -29,6 +41,20 @@ public class WebHelper {
 			e.printStackTrace();
 		}
 		return response;
+	}
+	
+	public static HTMLDocument getHTMLDocument(String url) {
+		try {
+			Reader stringReader = new StringReader(getResponse(url));
+			HTMLEditorKit htmlKit = new HTMLEditorKit();
+			HTMLDocument htmlDoc = (HTMLDocument) htmlKit.createDefaultDocument();
+			Parser parser = new ParserDelegator();
+			parser.parse(stringReader, htmlDoc.getReader(0), true);
+			return htmlDoc;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static String shortenlink(String str) {

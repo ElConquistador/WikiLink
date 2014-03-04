@@ -1,21 +1,12 @@
 package elcon.mods.wikilink.api;
 
-import java.util.Collection;
-import java.util.Map;
-
 public interface ILink {
-	
-	public Object getTopic();
 
-	public String get(ILinkType linkType);
+	public Object getTopic();
 	
-	public Collection<ILinkType> getAllTypes();
+	public ILinkType getLinkType();
 	
-	public Collection<String> getAllLinks();
+	public String getURL();
 	
-	public Map<ILinkType, String> getAll();
-	
-	public void add(ILinkType linkType, String link);
-	
-	public void remove(ILinkType linkType);
+	public String getName();
 }

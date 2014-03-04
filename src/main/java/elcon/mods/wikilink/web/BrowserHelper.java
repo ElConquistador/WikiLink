@@ -23,7 +23,6 @@ public class BrowserHelper {
 				Method openURL = fileMgr.getDeclaredMethod("openURL", new Class[]{String.class});
 				openURL.invoke(null, new Object[]{link});
 			} else {
-				// assume Unix or Linux
 				String[] browsers = {"xdg-open", "google-chrome", "firefox", "opera", "epiphany", "konqueror", "conkeror", "midori", "kazehakase", "mozilla", "netscape"};
 				String browser = null;
 				for(int count = 0; count < browsers.length && browser == null; count++) {
@@ -40,6 +39,5 @@ public class BrowserHelper {
 		} catch(Exception e) {
 			WikiLink.log.error("Can't find a browser to open links!");
 		}
-		WikiLink.log.info("Opening " + link);
 	}
 }

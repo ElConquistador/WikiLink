@@ -1,9 +1,11 @@
 package elcon.mods.wikilink.link;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 import cpw.mods.fml.common.Mod;
 import elcon.mods.wikilink.WikiLink;
+import elcon.mods.wikilink.api.ILink;
 import elcon.mods.wikilink.api.ILinkMod;
 import elcon.mods.wikilink.api.ILinkRegistry;
 import elcon.mods.wikilink.api.ILinkType;
@@ -12,10 +14,12 @@ public class LinkRegistry implements ILinkRegistry {
 
 	public static LinkRegistry instance;
 	
+	private LinkTypeComparator linkComparator = new LinkTypeComparator();
+	
 	private HashMap<String, ILinkType> linkTypes = new HashMap<String, ILinkType>();
 	private HashMap<String, ILinkMod> linkMods = new HashMap<String, ILinkMod>();
 	
-	private HashMap<Object, Link> linkCache = new HashMap<Object, Link>();
+	private HashMap<Object, LinkCollection> linkCache = new HashMap<Object, LinkCollection>();
 	
 	public LinkRegistry() {
 		instance = this;
@@ -46,14 +50,17 @@ public class LinkRegistry implements ILinkRegistry {
 	}
 	
 	@Override
-	public Link getLink(Object topic) {
+	public LinkCollection getLink(Object topic) {
 		if(linkCache.containsKey(topic)) {
 			return linkCache.get(topic);
 		}
-		Link link = new Link(topic);
+		LinkCollection link = new LinkCollection(topic);
 		for(ILinkType linkType : linkTypes.values()) {
-			if(linkType.getTopics().contains(topic.getClass())) {
-				link.add(linkType, linkType.generateSearchLink(topic));
+			for(Class<?> c : linkType.getTopics()) {
+				if(c.isAssignableFrom(topic.getClass())) {
+					link.add(linkType, linkType.generateSearchLink(topic));
+					break;
+				}
 			}
 		}
 		linkCache.put(topic, link);
@@ -63,5 +70,10 @@ public class LinkRegistry implements ILinkRegistry {
 	@Override
 	public ILinkMod getLinkMod(String mod) {
 		return linkMods.get(mod);
+	}
+	
+	@Override
+	public Comparator<ILink> getLinkComparator() {
+		return linkComparator;
 	}
 }
