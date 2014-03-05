@@ -12,7 +12,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 import elcon.mods.wikilink.api.ILink;
 import elcon.mods.wikilink.api.ILinkType;
-import elcon.mods.wikilink.link.Link;
+import elcon.mods.wikilink.api.WikiLinkAPI;
 import elcon.mods.wikilink.web.WebHelper;
 
 public class LinkTypeMinecraftWiki implements ILinkType {
@@ -53,7 +53,7 @@ public class LinkTypeMinecraftWiki implements ILinkType {
 	@Override
 	public ILink generateSearchLink(Object topic) {
 		String topicName = getTopicName(topic);
-		return new Link(topic, this, "http://minecraft.gamepedia.com/index.php?search=" + WebHelper.encode(topicName), topicName);
+		return WikiLinkAPI.linkRegistry.createLink(topic, this, "http://minecraft.gamepedia.com/index.php?search=" + WebHelper.encode(topicName), topicName);
 	}
 	
 	@Override

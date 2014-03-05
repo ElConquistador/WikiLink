@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.common.Mod;
 import elcon.mods.wikilink.api.ILink;
 import elcon.mods.wikilink.api.ILinkType;
-import elcon.mods.wikilink.link.Link;
+import elcon.mods.wikilink.api.WikiLinkAPI;
 import elcon.mods.wikilink.web.WebHelper;
 
 public class LinkTypeGoogle implements ILinkType {
@@ -55,7 +55,7 @@ public class LinkTypeGoogle implements ILinkType {
 	@Override
 	public ILink generateSearchLink(Object topic) {
 		String topicName = getTopicName(topic);
-		return new Link(topic, this, "http://google.com/search?q=minecraft+" + WebHelper.encode(topicName), topicName);
+		return WikiLinkAPI.linkRegistry.createLink(topic, this, "http://google.com/search?q=minecraft+" + WebHelper.encode(topicName), topicName);
 	}
 	
 	@Override

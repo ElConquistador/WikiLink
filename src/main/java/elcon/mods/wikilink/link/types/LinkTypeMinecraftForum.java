@@ -1,42 +1,32 @@
 package elcon.mods.wikilink.link.types;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.text.html.HTMLDocument;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.common.Mod;
 import elcon.mods.wikilink.api.ILink;
 import elcon.mods.wikilink.api.ILinkType;
 import elcon.mods.wikilink.api.WikiLinkAPI;
-import elcon.mods.wikilink.web.WebHelper;
 
-public class LinkTypeGoogleLucky implements ILinkType {
+public class LinkTypeMinecraftForum implements ILinkType {
 
 	@Override
 	public String getName() {
-		return "GoogleLucky";
+		return "MinecraftForum";
 	}
-	
+
 	@Override
 	public String getDisplayName() {
 		return StatCollector.translateToLocal("wikilink.types." + getName());
 	}
-	
+
 	@Override
 	public String getTopicName(Object topic) {
 		String topicName = "";
-		if(topic instanceof ItemStack) {
-			topicName = ((ItemStack) topic).getDisplayName();
-		} else if(topic instanceof FluidStack) {
-			topicName = ((FluidStack) topic).getFluid().getLocalizedName();
-		} else if(topic instanceof Entity) {
-			topicName = ((Entity) topic).getCommandSenderName();
-		} else if(topic instanceof Mod) {
+		if(topic instanceof Mod) {
 			topicName = ((Mod) topic).name();
 		}
 		return topicName;
@@ -44,35 +34,42 @@ public class LinkTypeGoogleLucky implements ILinkType {
 
 	@Override
 	public List<Class<?>> getTopics() {
-		return Arrays.asList(ItemStack.class, FluidStack.class, Entity.class, Mod.class);
+		ArrayList<Class<?>> list = new ArrayList<Class<?>>();
+		list.add(Mod.class);
+		return list;
 	}
 
 	@Override
 	public boolean isSearchOnly() {
-		return true;
+		return false;
 	}
-	
+
 	@Override
 	public ILink generateSearchLink(Object topic) {
 		String topicName = getTopicName(topic);
-		return WikiLinkAPI.linkRegistry.createLink(topic, this, "http://google.com/search?q=minecraft+" + WebHelper.encode(topicName) + "&btnI", topicName);
+		return WikiLinkAPI.linkRegistry.createLink(topic, this, "http://minecraftforum.net/index.php?app=core&module=search&do=search&search_term=" + topicName, topicName);
 	}
-	
+
 	@Override
 	public ILink generateLink(Object topic) {
+		String topicName = getTopicName(topic);
+		String forum = WikiLinkAPI.linkRegistry.getLinkMod(topicName).getForum();
+		if(forum != null && !forum.isEmpty() && forum.contains("minecraftforum.net")) {
+			return WikiLinkAPI.linkRegistry.createLink(topic, this, forum, topicName);
+		}
 		return null;
 	}
-	
+
 	@Override
 	public boolean hasPreview() {
-		return false;
+		return true;
 	}
-	
+
 	@Override
 	public String getPreviewTitle(ILink link, HTMLDocument html) {
-		return null;
+		return (String) html.getProperty(HTMLDocument.TitleProperty);
 	}
-	
+
 	@Override
 	public String getPreview(ILink link, HTMLDocument html) {
 		return null;

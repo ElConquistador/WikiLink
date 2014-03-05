@@ -40,6 +40,17 @@ public interface ILinkRegistry {
 	public ILinkMod generateLinkMod(Object mod, String thread, String site, String forum, String wiki);
 	
 	/**
+	 * Create a link using the default link object
+	 * 
+	 * @param topic The topic
+	 * @param linkType The link type
+	 * @param url The URL
+	 * @param name The name of the topic
+	 * @return An instance of the default link object
+	 */
+	public ILink createLink(Object topic, ILinkType linkType, String url, String name);
+	
+	/**
 	 * Get a link for a topic. This will use a cached link or generate a new one
 	 * A link ojbects contains one or more URLs
 	 * 

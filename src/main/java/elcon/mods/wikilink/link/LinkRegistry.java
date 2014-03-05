@@ -50,6 +50,11 @@ public class LinkRegistry implements ILinkRegistry {
 	}
 	
 	@Override
+	public ILink createLink(Object topic, ILinkType linkType, String url, String name) {
+		return new Link(topic, linkType, url, name);
+	}
+	
+	@Override
 	public LinkCollection getLink(Object topic) {
 		if(linkCache.containsKey(topic)) {
 			return linkCache.get(topic);
@@ -59,6 +64,12 @@ public class LinkRegistry implements ILinkRegistry {
 			for(Class<?> c : linkType.getTopics()) {
 				if(c.isAssignableFrom(topic.getClass())) {
 					link.add(linkType, linkType.generateSearchLink(topic));
+					if(!linkType.isSearchOnly()) {
+						ILink l = linkType.generateLink(topic);
+						if(l != null) {
+							link.add(linkType, l);
+						}
+					}
 					break;
 				}
 			}
