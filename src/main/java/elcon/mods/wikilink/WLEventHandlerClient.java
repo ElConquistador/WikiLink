@@ -2,6 +2,7 @@ package elcon.mods.wikilink;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
@@ -22,7 +23,12 @@ public class WLEventHandlerClient {
 			Object topic = null;
 			if(mc.inGameHasFocus) {
 				if(mc.pointedEntity != null) {
-					topic = mc.pointedEntity;
+					if(mc.pointedEntity instanceof EntityItem) {
+						topic = ((EntityItem) mc.pointedEntity).getEntityItem().copy();
+						((ItemStack) topic).stackSize = 1;
+					} else {
+						topic = mc.pointedEntity;
+					}
 				} else if(mc.objectMouseOver != null) {
 					MovingObjectPosition mop = mc.objectMouseOver;
 					if(mop.typeOfHit == MovingObjectType.BLOCK) {
@@ -30,7 +36,12 @@ public class WLEventHandlerClient {
 						topic = block.getPickBlock(mop, mc.theWorld, mop.blockX, mop.blockY, mop.blockZ);
 						((ItemStack) topic).stackSize = 1;
 					} else if(mop.typeOfHit == MovingObjectType.ENTITY) {
-						topic = mop.entityHit;
+						if(mop.entityHit instanceof EntityItem) {
+							topic = ((EntityItem) mop.entityHit).getEntityItem().copy();
+							((ItemStack) topic).stackSize = 1;
+						} else {
+							topic = mop.entityHit;
+						}
 					}
 				}
 			}
