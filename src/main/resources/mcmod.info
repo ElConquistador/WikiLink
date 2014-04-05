@@ -3,7 +3,7 @@
   "modid": "WikiLink",
   "name": "WikiLink",
   "description": "WikiLink adds access to various different information sources from links generated dynamically and given directly in game.",
-  "version": "@version@ (build @buildnumber@)",
+  "version": "${version} (build ${buildnumber})",
   "url": "",
   "updateUrl": "",
   "authorList": [

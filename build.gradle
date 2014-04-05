@@ -39,7 +39,18 @@ minecraft {
 version = "${config.minecraft_version}-${config.mod_version}.${System.getenv().BUILD_NUMBER}"
 
 processResources {
-	filter(ReplaceTokens, tokens: ['version': project.config.mod_version, 'mcversion': project.config.minecraft_version, 'buildnumber': "${System.getenv().BUILD_NUMBER}"])	
+	inputs.property "version", project.config.mod_version
+    inputs.property "mcversion", project.config.minecraft_version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+		expand 'version':project.config.mod_version, 'mcversion':project.config.minecraft_version, 'buildnumber':"${System.getenv().BUILD_NUMBER}"
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
 }
 
 task release(type: Copy) {
